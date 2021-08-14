@@ -2,7 +2,7 @@ const Koa = require('koa');
 
 const app = new Koa();
 
-app.use((ctx, next)=>{
+app.use(async (ctx, next)=>{
   console.log(ctx.url);
   console.log(1);
   if (ctx.query.authorized !=='1'){
@@ -10,9 +10,8 @@ app.use((ctx, next)=>{
     return;
   }
 
-  next().then(()=>{
-    console.log('End');
-  });
+  await next();
+  console.log('End');
 });
 
 app.use((ctx, next)=>{
