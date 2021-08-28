@@ -4,11 +4,23 @@ import Joi from 'joi';
 
 const {ObjectId} = mongoose.Types;
 
-export const checkObjectid = (ctx, next) => {
+export const getPostById = async (ctx, next) => {
   const {id} = ctx.params;
   if (!ObjectId.isValid(id)) {
     ctx.status = 400; //Bad Request
     return;
+  }
+  try {
+    const post = await Post.findById(id);
+    if(!post){
+      ctx.status = 404; //Not Found
+      return;
+    }
+
+    ctx.state.post = post;
+    return next();
+  } catch (e) {
+    ctx.throw(500, e);
   }
   return next();
 };
@@ -33,8 +45,12 @@ export const write = async ctx => {
   const post = new Post({
     title,
     body,
-    tags
+    tags,
+    user: ctx.state.user,
   });
+
+  // console.log(post);
+  
   try {
     await post.save();
     ctx.body = post;
@@ -51,8 +67,17 @@ export const list = async ctx =>{
     ctx.status = 400;
     return;
   }
+  // tag 및 username으로 목록 불러오기
+
+  const {tag, username} = ctx.query;
+
+  const query = {
+    ...(username? {'user.username': username}: {}),
+    ...(tag? {tags:tag}: {}),
+  };
+
   try{
-    const posts = await Post.find()
+    const posts = await Post.find(query)
     .sort({_id: -1})
     .limit(10)
     .skip((page-1)*10)
@@ -75,14 +100,9 @@ export const list = async ctx =>{
 };
 
 export const read = async ctx =>{
-  const {id} = ctx.params;
+
   try {
-    const post = await Post.findById(id).exec();
-    if(!post){
-      ctx.status = 404; //Not Found
-      return;
-    }
-    ctx.body = post;
+    ctx.body = ctx.state.post;
   } catch(e) {
     ctx.throw(500, e);
   }
@@ -127,6 +147,17 @@ export const update = async ctx =>{
   }
   
 };
+
+export const checkOwnPost = (ctx,next) =>{
+  const {user, post} = ctx.state;
+  if (post.user._id.toString() !==user._id){
+    ctx.status = 403;
+    return;
+  }
+
+  return next();
+}
+
 
 // /* 포스트 작성
 // Post /api/posts

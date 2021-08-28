@@ -38,6 +38,12 @@ export const register = async ctx =>{
     // 응답할 데이터에서 hashedPassword 필드 제거
 
     ctx.body = user.serialize();
+
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
   } catch(e) {
     ctx.throw(500, e);
   }
@@ -65,6 +71,13 @@ export const login = async ctx =>{
       return;
     }
     ctx.body = user.serialize();
+
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
+
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -72,8 +85,17 @@ export const login = async ctx =>{
 
 
 export const check = async ctx =>{
+  console.log('check method');
+  const {user} = ctx.state;
+  if(!user) {
+    ctx.status = 401; // Unauthorized
+    return;
+  }
+  ctx.body = user;
+};
 
-}
 export const logout = async ctx =>{
-
-}
+  ctx.cookies.set('access_token');
+  ctx.status = 204; // No Content
+  console.log("logout됨");
+};
