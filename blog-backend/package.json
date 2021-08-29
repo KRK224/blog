@@ -13,7 +13,8 @@
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.0.0",
-    "mongoose": "^5.13.7"
+    "mongoose": "^5.13.7",
+    "react-router-dom": "^5.2.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.29.1",
