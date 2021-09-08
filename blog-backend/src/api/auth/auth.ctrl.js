@@ -2,6 +2,7 @@ import Joi from 'joi';
 // import { exist } from '../../../node_modules/joi/lib/index';
 import User from '../../models/user';
 
+
 export const register = async ctx =>{
   const schema = Joi.object().keys({
     username: Joi.string()
@@ -15,6 +16,8 @@ export const register = async ctx =>{
   const result = schema.validate(ctx.request.body);
   if(result.error) {
     ctx.status = 400;
+    console.log('username: 문자+숫자');
+    console.log('ID 규약을 지켜주세요');    
     ctx.body = result.error;
     return;
   }

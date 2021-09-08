@@ -1,6 +1,8 @@
 import client from './client';
 
 
+// axios로 서버 요청 http method
+
 // 로그인
 export const login = ({username, password}) =>{
   client.post('/api/auth/login', {username, password});
