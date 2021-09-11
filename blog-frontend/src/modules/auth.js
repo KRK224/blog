@@ -32,7 +32,7 @@ export const changeField = createAction(
 );
 
 export const initializeForm = createAction(
-  INITIALIZE_FORM, form => form 
+  INITIALIZE_FORM, form => form
 ); // register or login
 
 export const register = createAction(REGISTER, 
