@@ -1,6 +1,6 @@
 import React from 'react';
 
-const WritePage = () =>{
+const WritePage = () => {
   return <div>글쓰기</div>;
 };
 

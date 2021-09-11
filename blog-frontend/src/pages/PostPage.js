@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PostPage = ()=>{
+const PostPage = () => {
   return <div>포스트 읽기</div>;
 };
 

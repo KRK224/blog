@@ -37,10 +37,11 @@ export const register = async ctx =>{
 
     await user.setPassword(password); // 비밀번호 설정
     await user.save(); // 데이터 베이스에 저장
-
+    console.log("데이터 베이스에 저장 완료");
     // 응답할 데이터에서 hashedPassword 필드 제거
 
     ctx.body = user.serialize();
+    console.log(ctx.body);
 
     const token = user.generateToken();
     ctx.cookies.set('access_token', token, {
@@ -48,6 +49,7 @@ export const register = async ctx =>{
       httpOnly: true,
     });
   } catch(e) {
+    console.log('backend-auth.ctrl.js 에러');
     ctx.throw(500, e);
   }
 };
